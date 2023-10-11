@@ -105,7 +105,7 @@ BEGIN Transaction @Tran
 
 ------------Providers-------------------
 INSERT INTO dbo.Providers
-		  ([TitleTypeId],
+		    ([TitleTypeId],
 			 [UserId],
 			 [GenderTypeId],
 			 [Phone],
@@ -126,7 +126,7 @@ INSERT INTO dbo.ProviderSpecialization
 			 [CreatedBy])                    
 SELECT		 
 			 @ProviderId,
-		   bs.SpecializationsId,
+		         bs.SpecializationsId,
 			 bs.IsPrimary,
 			 @UserId
 
@@ -135,7 +135,7 @@ SELECT
 			 SELECT 1
 			 FROM    dbo.ProviderSpecialization AS S
 			 WHERE   S.SpecializationId = bs.SpecializationsId AND
-					     S.ProviderId = @ProviderId)
+				 S.ProviderId = @ProviderId)
 ------------------------------------------
 ------------ProviderLanguages-------------
 INSERT INTO dbo.ProviderLanguages
@@ -143,14 +143,14 @@ INSERT INTO dbo.ProviderLanguages
 			 [LanguageId])                    
 SELECT		 
 			 @ProviderId,
-		     bL.LanguageId
+		         bL.LanguageId
 
 			 FROM    @ProviderLanguages AS bL 
 			 WHERE   NOT EXISTS (
 			 SELECT 1
 			 FROM    dbo.ProviderLanguages AS l
 			 WHERE   @ProviderId = l.ProviderId AND 
-					 L.LanguageId = bL.LanguageId)
+				 L.LanguageId = bL.LanguageId)
 ------------ProviderExpertise-------------
 INSERT INTO dbo.ProviderExpertise
 			([ProviderId],
@@ -158,7 +158,7 @@ INSERT INTO dbo.ProviderExpertise
 			 [CreatedBy])                    
 SELECT		 
 			 @ProviderId,
-		     bs.ExpertiseId,
+		         bs.ExpertiseId,
 			 @UserId
 
 			 FROM    @ProviderExpertise AS bs 
@@ -166,7 +166,7 @@ SELECT
 			 SELECT 1
 			 FROM    dbo.ProviderExpertise AS S
 			 WHERE   S.ExpertiseId = bs.ExpertiseId and
-					 @providerId = S.ProviderId)
+				 @providerId = S.ProviderId)
 -------------------------------------------
 ------------Licenses-----------------------
 
@@ -186,9 +186,9 @@ SELECT
 			 SELECT 1
 			 FROM    dbo.Licenses AS l
 			 WHERE   l.LicenseStateId = bl.LicenseStateId AND
-				       l.LicenseNumber = bl.LicenseNumber AND
-				       l.DateExpires = bl.DateExpires AND
-					     @UserId = l.CreatedBy)
+				 l.LicenseNumber = bl.LicenseNumber AND
+			         l.DateExpires = bl.DateExpires AND
+				 @UserId = l.CreatedBy)
 											 
 ------------------------------------------
 ------------ProffesionalDetails-----------			
