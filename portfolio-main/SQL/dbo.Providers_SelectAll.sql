@@ -19,7 +19,7 @@ GO
 -- =============================================
 
 ALTER proc [dbo].[Providers_SelectAll]
-as
+AS
 /*
 execute dbo.Providers_SelectAll
 */
@@ -30,26 +30,26 @@ begin
   SELECT 
 		
 	  P.[Id],
-		TT.[Id] as TittleId,
-		TT.[Name] as Tittle,
+		TT.[Id] AS TittleId,
+		TT.[Name] AS Tittle,
 		dbo.fn_GetUserJSON(p.UserId) AS [UserData],
-		GT.[Id] as GenderId,
-		GT.[Name] as Gender,
+		GT.[Id] AS GenderId,
+		GT.[Name] AS Gender,
 		PD.[NPI],
-		GA.[Id] as GenderAcceptedId,
-		GA.[Name] as GenderAccepted,
+		GA.[Id] AS GenderAcceptedId,
+		GA.[Name] AS GenderAccepted,
 		P.[Phone],
 		P.[Fax],
         
         (
             SELECT 
-				        PS.SpecializationId as 'specialization.id',
-                S.[Name] as 'specialization.name',
+		PS.SpecializationId AS 'specialization.id',
+                S.[Name] AS 'specialization.name',
                 PS.isPrimary AS SpecializationIsPrimary
                 
-               FROM dbo.ProviderSpecialization as PS
-			         inner join dbo.Specialization as S 
-			         On PS.SpecializationId = S.Id
+               FROM dbo.ProviderSpecialization AS PS
+	       INNER JOIN dbo.Specialization AS S 
+	       On PS.SpecializationId = S.Id
                WHERE P.Id = PS.ProviderId
                FOR JSON PATH
         ) AS Specializations,
@@ -58,9 +58,9 @@ begin
             SELECT 
                L.[Name]
             
-               FROM dbo.ProviderLanguages as PL
-			         inner join dbo.Languages as L
-			         On PL.LanguageId = L.Id
+               FROM dbo.ProviderLanguages AS PL
+	       INNER JOIN dbo.Languages AS L
+               On PL.LanguageId = L.Id
                WHERE P.Id = PL.ProviderId
                FOR JSON PATH
         ) AS Languages,
@@ -69,41 +69,41 @@ begin
             SELECT 
                 ET.[Name]
   
-                FROM dbo.ProviderExpertise as PE
-    			      inner join dbo.ExpertiseTypes as ET
-    		      	On PE.ExpertiseId = ET.Id
+                FROM dbo.ProviderExpertise AS PE
+	        INNER JOIN dbo.ExpertiseTypes AS ET
+    		On PE.ExpertiseId = ET.Id
                 WHERE P.Id = PE.ProviderId
                 FOR JSON PATH
         ) AS Expertises,
 		    (
             SELECT 
-                L.[LicenseStateId] as 'state.id',
-        				ST.[Name] as 'state.name',
-        				L.LicenseNumber ,
-        				L.DateExpires
+                L.[LicenseStateId] AS 'state.id',
+        	ST.[Name] AS 'state.name',
+                L.LicenseNumber ,
+                L.DateExpires
   
-                FROM dbo.Licenses as L
-    		      	inner join dbo.States as ST
-    		      	On L.LicenseStateId = ST.Id
+                FROM dbo.Licenses AS L
+    	        INNER JOIN dbo.States AS ST
+    		On L.LicenseStateId = ST.Id
                 WHERE P.UserId = L.CreatedBy 
                 FOR JSON PATH
         ) AS Licenses
   
-            		FROM dbo.Providers P
-            		inner join dbo.ProfessionalDetails as PD
-            		ON P.Id = PD.ProviderId
+            	FROM dbo.Providers P
+            	INNER JOIN dbo.ProfessionalDetails AS PD
+		ON P.Id = PD.ProviderId
+	
+	       INNER JOIN dbo.Users AS U 
+               On P.UserId = U.Id
   
-            		inner join dbo.Users as U 
-            		On P.UserId = U.Id
+               INNER JOIN dbo.GenderTypes AS GT
+               On P.GenderTypeId = GT.Id 
   
-            		inner join dbo.GenderTypes as GT
-            		On P.GenderTypeId = GT.Id 
+               INNER JOIN dbo.GenderTypes AS GA
+               On PD.GenderAccepted = GA.Id 
   
-            		inner join dbo.GenderTypes as GA
-            		On PD.GenderAccepted = GA.Id 
-  
-            		inner join dbo.TitleTypes as TT
-            		On P.TitleTypeId = TT.Id
+               INNER JOIN dbo.TitleTypes AS TT
+               On P.TitleTypeId = TT.Id
 		
 END;
 
