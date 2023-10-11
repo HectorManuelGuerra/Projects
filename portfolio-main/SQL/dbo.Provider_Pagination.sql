@@ -48,44 +48,51 @@ begin
 		
         (
             SELECT 
-				PS.SpecializationId as 'specialization.id',
+		PS.SpecializationId as 'specialization.id',
                 S.[Name] as 'specialization.name',
                 PS.isPrimary AS SpecializationIsPrimary
-            FROM dbo.ProviderSpecialization as PS
-			inner join dbo.Specialization as S 
-			On PS.SpecializationId = S.Id
-            WHERE P.Id = PS.ProviderId
-            FOR JSON PATH
+	
+               FROM dbo.ProviderSpecialization as PS
+	       inner join dbo.Specialization as S 
+	       On PS.SpecializationId = S.Id
+               WHERE P.Id = PS.ProviderId
+               FOR JSON PATH
         ) AS Specializations,
+	
         (
             SELECT 
                L.[Name]
-            FROM dbo.ProviderLanguages as PL
-			inner join dbo.Languages as L
-			On PL.LanguageId = L.Id
-            WHERE P.Id = PL.ProviderId
-            FOR JSON PATH
+            
+	       FROM dbo.ProviderLanguages as PL
+	       inner join dbo.Languages as L
+	       On PL.LanguageId = L.Id
+               WHERE P.Id = PL.ProviderId
+               FOR JSON PATH
         ) AS Languages,
+	
         (
             SELECT 
                 ET.[Name]
-            FROM dbo.ProviderExpertise as PE
-			inner join dbo.ExpertiseTypes as ET
-			On PE.ExpertiseId = ET.Id
-            WHERE P.Id = PE.ProviderId
-            FOR JSON PATH
+                
+		FROM dbo.ProviderExpertise as PE
+		inner join dbo.ExpertiseTypes as ET
+		On PE.ExpertiseId = ET.Id
+                WHERE P.Id = PE.ProviderId
+                FOR JSON PATH
         ) AS Expertises,
-		 (
+	
+	(
             SELECT 
                 L.[LicenseStateId] as 'state.id',
-				ST.[Name] as 'state.name',
-				L.LicenseNumber ,
-				L.DateExpires
-            FROM dbo.Licenses as L
-			inner join dbo.States as ST
-			On L.LicenseStateId = ST.Id
-            WHERE P.UserId = L.CreatedBy 
-            FOR JSON PATH
+		ST.[Name] as 'state.name',
+		L.LicenseNumber ,
+		L.DateExpires
+            
+		FROM dbo.Licenses as L
+		inner join dbo.States as ST
+		On L.LicenseStateId = ST.Id
+                WHERE P.UserId = L.CreatedBy 
+                FOR JSON PATH
         ) AS Licenses,
 		
 		[TotalCount] = COUNT(1) OVER()
